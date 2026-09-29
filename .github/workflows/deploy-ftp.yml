@@ -23,6 +23,24 @@ jobs:
           find ./web -type d -exec chmod 755 {} +
           find ./web -type f -exec chmod 644 {} +
 
+      - name: Require safe FTP_REMOTE_DIR
+        env:
+          FTP_REMOTE_DIR: ${{ secrets.FTP_REMOTE_DIR }}
+        run: |
+          if [ -z "${FTP_REMOTE_DIR}" ]; then
+            echo "FTP_REMOTE_DIR secret is empty — refusing deploy (would mirror into FTP home with --delete)." >&2
+            exit 1
+          fi
+          case "${FTP_REMOTE_DIR}" in
+            /var/www/html/login|/var/www/html/login/)
+              echo "Remote dir OK: ${FTP_REMOTE_DIR}"
+              ;;
+            *)
+              echo "FTP_REMOTE_DIR must be /var/www/html/login (got: ${FTP_REMOTE_DIR})" >&2
+              exit 1
+              ;;
+          esac
+
       - name: Debug env
         run: |
           echo "Host: $FTP_HOST"
