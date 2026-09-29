@@ -18,7 +18,7 @@ cp web/cfg_TEMPLATE.php web/cfg.php
 # vul client_secret + asclepius_api_key
 ```
 
-FTP-deploy overschrijft `cfg.php` en `data/remember_tokens/*.json` niet.
+FTP-deploy overschrijft `cfg.php` niet en raakt `data/` (map + inhoud) helemaal niet aan, zodat schrijfrechten op de server blijven.
 
 ## Deploy
 

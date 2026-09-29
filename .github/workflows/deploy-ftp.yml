@@ -50,18 +50,15 @@ jobs:
 
           cd "$FTP_REMOTE_DIR"
 
+          # Exclude data node + contents so FTP umask cannot reset writable perms.
           mirror -R --delete \
             --exclude-glob cfg.php \
             --exclude-glob .htaccess \
             --exclude-glob tests \
             --exclude-glob tests/** \
-            --exclude-glob data/remember_tokens/*.json \
-            --exclude-glob data/remember_tokens/**/*.json \
+            --exclude-glob data \
+            --exclude-glob data/** \
             ./web .
-
-          set cmd:fail-exit false
-          chmod 777 data || true
-          chmod 777 data/remember_tokens || true
 
           bye
           EOF
