@@ -1,0 +1,14 @@
+# Secrets / local config (keep on server only)
+web/cfg.php
+cfg.php
+
+# Runtime remember-me tokens
+web/data/remember_tokens/*.json
+data/remember_tokens/*.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
