@@ -85,7 +85,15 @@ function login_start_session_for_request(): void
 
     try {
         $hasCookie = isset($_COOKIE[session_name()]) && (string) $_COOKIE[session_name()] !== '';
-        if ($hasCookie && session_start(['read_and_close' => true])) {
+        if ($hasCookie) {
+            if (!session_start(['read_and_close' => true])) {
+                // Lock bezet of Redis-fout: niet nóg een keer schrijfbaar proberen
+                // (dat wacht opnieuw op hetzelfde lock). De remember-cookie kan
+                // de gebruiker voor dit verzoek alsnog herstellen.
+                error_log('[login] session_start mislukt (lock bezet?) voor ' . (string) ($_SERVER['REQUEST_URI'] ?? ''));
+                return;
+            }
+
             $email = strtolower(trim((string) ($_SESSION['user']['email'] ?? '')));
             if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return;
